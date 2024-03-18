@@ -1,0 +1,45 @@
+import { Component, EventEmitter, Input, OnInit, Output, input } from '@angular/core';
+import { conexionService } from '../../conexio.service';
+import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
+import { PrimeIcons } from 'primeng/api';
+
+@Component({
+  selector: 'app-tabla',
+  standalone: true,
+  imports: [CommonModule, ButtonModule],
+  templateUrl: './tabla.component.html',
+  styleUrl: './tabla.component.css'
+})
+export class TablaComponent implements OnInit {
+
+  @Input() data:any = []
+  @Output() actualizarEvento = new EventEmitter()
+  @Output() eventoEliminado = new EventEmitter()
+
+  constructor(private service: conexionService
+){
+
+}
+
+
+  ngOnInit(): void {
+
+  }
+
+update(body:string , id:any){
+  this.actualizarEvento.emit({body:body, id:id})
+  console.log("aqui se envio algo")
+}
+
+  deleteEvent(id: any){
+    this.service.delete(id).subscribe((resp)=>{
+      this.eventoEliminado.emit()
+      console.log("se elimino esto ", resp)
+    },
+    (error)=>{
+      console.log(error)
+    })
+  }
+
+}
